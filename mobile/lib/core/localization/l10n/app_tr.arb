@@ -1,0 +1,127 @@
+{
+  "@@locale": "tr",
+  "appTitle": "Nöbetçi Eczane+",
+  "@appTitle": {
+    "description": "The application title shown in the OS task switcher and app bar."
+  },
+  "homeTitle": "Ana Sayfa",
+  "@homeTitle": {
+    "description": "Title of the home screen."
+  },
+  "loading": "Yükleniyor...",
+  "@loading": {
+    "description": "Generic loading state message."
+  },
+  "errorTitle": "Bir şeyler ters gitti",
+  "@errorTitle": {
+    "description": "Generic error state title."
+  },
+  "errorRetry": "Tekrar Dene",
+  "@errorRetry": {
+    "description": "Retry button label on error states."
+  },
+  "emptyTitle": "Sonuç bulunamadı",
+  "@emptyTitle": {
+    "description": "Generic empty state title."
+  },
+  "searchHint": "Ad, ilçe veya adrese göre ara",
+  "@searchHint": {
+    "description": "Placeholder for the pharmacy search field."
+  },
+  "districtAll": "Tüm İlçeler",
+  "@districtAll": {
+    "description": "Label for the 'all districts' filter chip."
+  },
+  "onDuty": "Nöbetçi",
+  "@onDuty": {
+    "description": "Badge label for a pharmacy currently on duty."
+  },
+  "notOnDuty": "Nöbetçi Değil",
+  "@notOnDuty": {
+    "description": "Badge label for a pharmacy not currently on duty."
+  },
+  "openInMaps": "Haritada Göster",
+  "@openInMaps": {
+    "description": "Tooltip for the button that will open a pharmacy's location in maps."
+  },
+  "mapsComingSoon": "Harita entegrasyonu yakında eklenecek",
+  "@mapsComingSoon": {
+    "description": "Shown when the maps button is tapped before Maps integration is configured."
+  },
+  "noPharmaciesFound": "Eczane bulunamadı",
+  "@noPharmaciesFound": {
+    "description": "Empty state message when the pharmacy list (after filtering) has no results."
+  },
+  "noPharmaciesFoundHint": "Arama veya ilçe filtresini değiştirmeyi deneyin.",
+  "@noPharmaciesFoundHint": {
+    "description": "Empty state hint suggesting the user adjust search/filter."
+  },
+  "addressLabel": "Adres",
+  "@addressLabel": {
+    "description": "Label for the pharmacy address field on the details screen."
+  },
+  "districtLabel": "İlçe",
+  "@districtLabel": {
+    "description": "Label for the pharmacy district field on the details screen."
+  },
+  "phoneLabel": "Telefon",
+  "@phoneLabel": {
+    "description": "Label for the pharmacy phone field on the details screen."
+  },
+  "dutyHoursLabel": "Nöbet Saatleri",
+  "@dutyHoursLabel": {
+    "description": "Label for the opening/closing duty hours section."
+  },
+  "dutyHoursNotSpecified": "Belirtilmemiş",
+  "@dutyHoursNotSpecified": {
+    "description": "Shown when opening/closing time is not available for a pharmacy."
+  },
+  "callAction": "Ara",
+  "@callAction": {
+    "description": "Button label to call the pharmacy."
+  },
+  "shareAction": "Paylaş",
+  "@shareAction": {
+    "description": "Button label to share the pharmacy."
+  },
+  "addToFavorites": "Favorilere Ekle",
+  "@addToFavorites": {
+    "description": "Tooltip/action to add a pharmacy to favorites."
+  },
+  "removeFromFavorites": "Favorilerden Çıkar",
+  "@removeFromFavorites": {
+    "description": "Tooltip/action to remove a pharmacy from favorites."
+  },
+  "actionUnavailable": "Bu işlem şu anda gerçekleştirilemiyor",
+  "@actionUnavailable": {
+    "description": "Shown when an external action (call, maps, share) could not be launched."
+  },
+  "pharmacyNotFound": "Eczane bulunamadı",
+  "@pharmacyNotFound": {
+    "description": "Title shown on the details screen when the pharmacy could not be loaded."
+  },
+  "onDutyOnly": "Sadece Nöbetçi",
+  "@onDutyOnly": {
+    "description": "Label for the on-duty-only filter toggle."
+  },
+  "clearFilters": "Filtreleri Temizle",
+  "@clearFilters": {
+    "description": "Action to reset search text, district, and on-duty filters."
+  },
+  "errorNetwork": "İnternet bağlantısı yok. Lütfen bağlantınızı kontrol edip tekrar deneyin.",
+  "@errorNetwork": {
+    "description": "User-facing message for a network connectivity failure."
+  },
+  "errorTimeout": "İstek zaman aşımına uğradı. Lütfen tekrar deneyin.",
+  "@errorTimeout": {
+    "description": "User-facing message for a request timeout."
+  },
+  "errorServer": "Sunucu tarafında bir sorun oluştu. Lütfen kısa süre sonra tekrar deneyin.",
+  "@errorServer": {
+    "description": "User-facing message for a server-side error response."
+  },
+  "errorUnknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
+  "@errorUnknown": {
+    "description": "User-facing message for an unclassified error."
+  }
+}
