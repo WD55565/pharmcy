@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,11 +27,31 @@ GoRouter appRouter(Ref ref) {
           final id = int.tryParse(state.pathParameters['id'] ?? '');
           return id == null ? RoutePaths.home : null;
         },
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final id = int.parse(state.pathParameters['id']!);
-          return PharmacyDetailScreen(pharmacyId: id);
+          return _fadeThroughPage(state, PharmacyDetailScreen(pharmacyId: id));
         },
       ),
     ],
+  );
+}
+
+/// A subtle fade + slide-up transition, used instead of GoRouter's default
+/// (platform-dependent, sometimes instant on web/desktop) page transition.
+CustomTransitionPage<void> _fadeThroughPage(GoRouterState state, Widget child) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: const Duration(milliseconds: 250),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final curved = CurvedAnimation(parent: animation, curve: Curves.easeOut);
+      return FadeTransition(
+        opacity: curved,
+        child: SlideTransition(
+          position: Tween(begin: const Offset(0, 0.04), end: Offset.zero).animate(curved),
+          child: child,
+        ),
+      );
+    },
   );
 }

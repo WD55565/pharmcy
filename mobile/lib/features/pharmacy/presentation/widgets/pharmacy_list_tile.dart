@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/localization/l10n/app_localizations.dart';
+import '../../../../core/theme/app_spacing.dart';
 import '../../domain/entities/pharmacy.dart';
 import 'duty_status_chip.dart';
 
@@ -34,48 +35,61 @@ class PharmacyListTile extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+        child: IntrinsicHeight(
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              CircleAvatar(
-                backgroundColor: statusColor.withValues(alpha: 0.15),
-                foregroundColor: statusColor,
-                child: const Icon(Icons.local_pharmacy_outlined),
-              ),
-              const SizedBox(width: 12),
+              // A thin accent stripe gives an at-a-glance duty signal even
+              // before reading the chip text — a common premium-list
+              // pattern (status colour as a border, not just a label).
+              Container(width: 4, color: statusColor),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      pharmacy.name,
-                      style: theme.textTheme.titleMedium,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${pharmacy.district} · ${pharmacy.address}',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: statusColor.withValues(alpha: 0.15),
+                        foregroundColor: statusColor,
+                        child: const Icon(Icons.local_pharmacy_outlined),
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(pharmacy.phone, style: theme.textTheme.bodySmall),
-                    const SizedBox(height: 8),
-                    DutyStatusChip(isOnDuty: pharmacy.isOnDuty),
-                  ],
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              pharmacy.name,
+                              style: theme.textTheme.titleMedium,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              '${pharmacy.district} · ${pharmacy.address}',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(pharmacy.phone, style: theme.textTheme.bodySmall),
+                            const SizedBox(height: AppSpacing.sm),
+                            DutyStatusChip(isOnDuty: pharmacy.isOnDuty),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      IconButton.filledTonal(
+                        tooltip: l10n.openInMaps,
+                        icon: const Icon(Icons.map_outlined),
+                        onPressed: onOpenMaps,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              IconButton.filledTonal(
-                tooltip: l10n.openInMaps,
-                icon: const Icon(Icons.map_outlined),
-                onPressed: onOpenMaps,
               ),
             ],
           ),
