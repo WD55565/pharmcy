@@ -17,6 +17,9 @@ in source control.
 | `DB_PASSWORD` | Yes | *(empty)* | MySQL password. |
 | `CORS_ALLOWED_ORIGINS` | Yes | `*` | Comma-separated list of exact origins allowed to call `/api/**` (e.g. `https://app.example.com`). No wildcard default in production — must be set explicitly. |
 | `PORT` | No | `8080` | Server port. Many hosts (Railway, Render, Fly.io) inject this automatically. |
+| `GEMINI_API_KEY` | No (soft-required) | *(empty)* | Google Gemini API key for the in-app AI assistant (`/api/assistant/chat`). Never hardcoded or logged. If unset, the assistant endpoint returns a clean `503` ("The AI assistant is not configured") instead of crashing the app — every other feature keeps working. Get a free-tier key at [Google AI Studio](https://aistudio.google.com/apikey). |
+| `GEMINI_MODEL` | No | `gemini-2.0-flash` | Gemini model name, in case the default is renamed/deprecated later. |
+| `GEMINI_BASE_URL` | No | `https://generativelanguage.googleapis.com/v1beta` | Override only if Google changes the API base URL. |
 
 ### `docker-compose` only (local production-like testing)
 
@@ -34,6 +37,13 @@ running `docker compose up`. **Never commit `.env`.**
 |---|---|---|
 | `API_BASE_URL` | `--dart-define` | Backend base URL, e.g. `https://api.example.com/api`. Required for production builds — the build fails immediately (at runtime, not just in debug) if it's missing. |
 | `GOOGLE_MAPS_API_KEY` | `--dart-define` (not yet wired into build config) | Reserved for future native Google Maps key wiring; unused today — see `lib/features/pharmacy/presentation/widgets/pharmacy_map_preview.dart`. |
+
+Note: there is deliberately **no** Gemini API key variable for the mobile app.
+The Flutter client never talks to Gemini directly — it calls the backend's
+`/api/assistant/chat`, which calls Gemini server-side. A secret baked into a
+`--dart-define` for a **web** build ends up readable in the compiled
+JavaScript bundle by anyone, so keeping the key backend-only is a security
+requirement, not just a style choice.
 
 ## 2. Backend: build and run
 
