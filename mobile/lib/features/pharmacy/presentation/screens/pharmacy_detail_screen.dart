@@ -4,18 +4,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/localization/l10n/app_localizations.dart';
 import '../../../../core/network/failure.dart';
 import '../../../../core/network/failure_localizations.dart';
+import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/external_actions.dart';
 import '../../../../core/utils/time_format.dart';
 import '../../../../core/widgets/error_view.dart';
-import '../../../../core/widgets/loading_view.dart';
+import '../../../../core/widgets/fade_slide_in.dart';
+import '../../../../core/widgets/max_width_content.dart';
 import '../../domain/entities/pharmacy.dart';
 import '../providers/pharmacy_detail_provider.dart';
 import '../providers/pharmacy_favorites_provider.dart';
 import '../widgets/duty_status_chip.dart';
+import '../widgets/pharmacy_detail_skeleton.dart';
 import '../widgets/pharmacy_map_preview.dart';
 
 /// Details for a single pharmacy: full info, call/maps/share actions, and a
-/// (UI-only, not yet persisted) favorite toggle.
+/// favorite toggle persisted on-device.
 class PharmacyDetailScreen extends ConsumerWidget {
   const PharmacyDetailScreen({required this.pharmacyId, super.key});
 
@@ -31,13 +34,23 @@ class PharmacyDetailScreen extends ConsumerWidget {
         title: Text(pharmacyAsync.value?.name ?? l10n.loading),
         actions: [_FavoriteToggleButton(pharmacyId: pharmacyId)],
       ),
-      body: pharmacyAsync.when(
-        loading: () => const LoadingView(),
-        error: (error, stackTrace) => ErrorView(
-          message: _describeError(l10n, error),
-          onRetry: () => ref.invalidate(pharmacyDetailProvider(pharmacyId)),
+      body: MaxWidthContent(
+        maxWidth: 720,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: pharmacyAsync.when(
+            loading: () => const PharmacyDetailSkeleton(key: ValueKey('loading')),
+            error: (error, stackTrace) => ErrorView(
+              key: const ValueKey('error'),
+              message: _describeError(l10n, error),
+              onRetry: () => ref.invalidate(pharmacyDetailProvider(pharmacyId)),
+            ),
+            data: (pharmacy) => _PharmacyDetailBody(
+              key: const ValueKey('data'),
+              pharmacy: pharmacy,
+            ),
+          ),
         ),
-        data: (pharmacy) => _PharmacyDetailBody(pharmacy: pharmacy),
       ),
     );
   }
@@ -55,16 +68,20 @@ class _FavoriteToggleButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final isFavorite = ref.watch(
-      pharmacyFavoritesProvider.select(
-        (favorites) => favorites.contains(pharmacyId),
-      ),
+      pharmacyFavoritesProvider.select((favorites) => favorites.contains(pharmacyId)),
     );
 
     return IconButton(
       tooltip: isFavorite ? l10n.removeFromFavorites : l10n.addToFavorites,
-      icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-      onPressed: () =>
-          ref.read(pharmacyFavoritesProvider.notifier).toggle(pharmacyId),
+      icon: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        transitionBuilder: (child, animation) => ScaleTransition(scale: animation, child: child),
+        child: Icon(
+          isFavorite ? Icons.favorite : Icons.favorite_border,
+          key: ValueKey(isFavorite),
+        ),
+      ),
+      onPressed: () => ref.read(pharmacyFavoritesProvider.notifier).toggle(pharmacyId),
     );
   }
 }
@@ -75,13 +92,11 @@ String _describeError(AppLocalizations l10n, Object error) {
   if (error is ServerFailure && error.statusCode == 404) {
     return l10n.pharmacyNotFound;
   }
-  return error is Failure
-      ? localizedFailureMessage(l10n, error)
-      : l10n.errorUnknown;
+  return error is Failure ? localizedFailureMessage(l10n, error) : l10n.errorUnknown;
 }
 
 class _PharmacyDetailBody extends StatelessWidget {
-  const _PharmacyDetailBody({required this.pharmacy});
+  const _PharmacyDetailBody({required this.pharmacy, super.key});
 
   final Pharmacy pharmacy;
 
@@ -94,96 +109,95 @@ class _PharmacyDetailBody extends StatelessWidget {
     final closingTime = formatDutyTime(pharmacy.closingTime);
     final hasDutyHours = openingTime != null || closingTime != null;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  pharmacy.name,
-                  style: theme.textTheme.headlineSmall,
+    return FadeSlideIn(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(pharmacy.name, style: theme.textTheme.headlineSmall),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                DutyStatusChip(isOnDuty: pharmacy.isOnDuty),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _DetailRow(
+                      icon: Icons.location_on_outlined,
+                      label: l10n.addressLabel,
+                      value: pharmacy.address,
+                    ),
+                    const Divider(height: AppSpacing.xl),
+                    _DetailRow(
+                      icon: Icons.map_outlined,
+                      label: l10n.districtLabel,
+                      value: pharmacy.district,
+                    ),
+                    const Divider(height: AppSpacing.xl),
+                    _DetailRow(
+                      icon: Icons.phone_outlined,
+                      label: l10n.phoneLabel,
+                      value: pharmacy.phone,
+                    ),
+                    const Divider(height: AppSpacing.xl),
+                    _DetailRow(
+                      icon: Icons.schedule_outlined,
+                      label: l10n.dutyHoursLabel,
+                      value: hasDutyHours
+                          ? '${openingTime ?? '--:--'} - ${closingTime ?? '--:--'}'
+                          : l10n.dutyHoursNotSpecified,
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 12),
-              DutyStatusChip(isOnDuty: pharmacy.isOnDuty),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _DetailRow(
-                    icon: Icons.location_on_outlined,
-                    label: l10n.addressLabel,
-                    value: pharmacy.address,
-                  ),
-                  const Divider(height: 24),
-                  _DetailRow(
-                    icon: Icons.map_outlined,
-                    label: l10n.districtLabel,
-                    value: pharmacy.district,
-                  ),
-                  const Divider(height: 24),
-                  _DetailRow(
-                    icon: Icons.phone_outlined,
-                    label: l10n.phoneLabel,
-                    value: pharmacy.phone,
-                  ),
-                  const Divider(height: 24),
-                  _DetailRow(
-                    icon: Icons.schedule_outlined,
-                    label: l10n.dutyHoursLabel,
-                    value: hasDutyHours
-                        ? '${openingTime ?? '--:--'} - ${closingTime ?? '--:--'}'
-                        : l10n.dutyHoursNotSpecified,
-                  ),
-                ],
-              ),
             ),
-          ),
-          if (pharmacy.hasCoordinates) ...[
-            const SizedBox(height: 16),
-            PharmacyMapPreview(
-              pharmacy: pharmacy,
-              onTap: () => _handleOpenMaps(context, pharmacy),
+            if (pharmacy.hasCoordinates) ...[
+              const SizedBox(height: AppSpacing.lg),
+              PharmacyMapPreview(
+                pharmacy: pharmacy,
+                onTap: () => _handleOpenMaps(context, pharmacy),
+              ),
+            ],
+            const SizedBox(height: AppSpacing.xl),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton.icon(
+                    icon: const Icon(Icons.call_outlined),
+                    label: Text(l10n.callAction),
+                    onPressed: () => _handleCall(context, pharmacy),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    icon: const Icon(Icons.map_outlined),
+                    label: Text(l10n.openInMaps),
+                    onPressed: () => _handleOpenMaps(context, pharmacy),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.share_outlined),
+                label: Text(l10n.shareAction),
+                onPressed: () => _handleShare(pharmacy),
+              ),
             ),
           ],
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Expanded(
-                child: FilledButton.icon(
-                  icon: const Icon(Icons.call_outlined),
-                  label: Text(l10n.callAction),
-                  onPressed: () => _handleCall(context, pharmacy),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton.icon(
-                  icon: const Icon(Icons.map_outlined),
-                  label: Text(l10n.openInMaps),
-                  onPressed: () => _handleOpenMaps(context, pharmacy),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              icon: const Icon(Icons.share_outlined),
-              label: Text(l10n.shareAction),
-              onPressed: () => _handleShare(pharmacy),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -211,18 +225,12 @@ class _PharmacyDetailBody extends StatelessWidget {
 
   void _showActionUnavailable(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(l10n.actionUnavailable)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.actionUnavailable)));
   }
 }
 
 class _DetailRow extends StatelessWidget {
-  const _DetailRow({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
+  const _DetailRow({required this.icon, required this.label, required this.value});
 
   final IconData icon;
   final String label;
@@ -235,18 +243,16 @@ class _DetailRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.md),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 label,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+                style: theme.textTheme.labelMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: AppSpacing.xs),
               Text(value, style: theme.textTheme.bodyLarge),
             ],
           ),

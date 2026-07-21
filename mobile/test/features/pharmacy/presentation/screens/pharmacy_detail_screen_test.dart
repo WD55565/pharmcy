@@ -10,6 +10,7 @@ import 'package:mobile/features/pharmacy/data/datasources/pharmacy_favorites_loc
 import 'package:mobile/features/pharmacy/domain/entities/pharmacy.dart';
 import 'package:mobile/features/pharmacy/presentation/providers/pharmacy_detail_provider.dart';
 import 'package:mobile/features/pharmacy/presentation/screens/pharmacy_detail_screen.dart';
+import 'package:mobile/features/pharmacy/presentation/widgets/pharmacy_detail_skeleton.dart';
 import 'package:mobile/features/pharmacy/presentation/widgets/pharmacy_map_preview.dart';
 
 /// In-memory stand-in for the real SharedPreferences-backed data source, so
@@ -146,7 +147,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('shows a loading indicator before data arrives', (tester) async {
+  testWidgets('shows a skeleton loading state before data arrives', (tester) async {
     await tester.pumpWidget(
       _wrap(
         const PharmacyDetailScreen(pharmacyId: 42),
@@ -156,10 +157,14 @@ void main() {
       ),
     );
 
-    // Before the fake future resolves, the loading state must be visible.
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    // Before the fake future resolves, the skeleton loading state must be
+    // visible instead of the real content.
+    expect(find.byType(PharmacyDetailSkeleton), findsOneWidget);
+    expect(find.text(_pharmacy.address), findsNothing);
 
     await tester.pumpAndSettle();
+
+    expect(find.byType(PharmacyDetailSkeleton), findsNothing);
   });
 
   testWidgets('shows an error state with retry when loading fails', (
