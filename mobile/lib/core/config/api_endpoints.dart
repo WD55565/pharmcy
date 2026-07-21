@@ -3,6 +3,7 @@
 /// URLs. Kept centralized so a backend route change is a one-line edit.
 abstract final class ApiEndpoints {
   static const String pharmacies = '/pharmacies';
+  static const String assistantChat = '/assistant/chat';
 
   static String pharmacyById(int id) => '$pharmacies/$id';
 }

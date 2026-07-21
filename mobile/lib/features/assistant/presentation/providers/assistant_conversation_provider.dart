@@ -1,8 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../data/repositories/mock_assistant_repository_impl.dart';
+import '../../data/repositories/gemini_assistant_repository_impl.dart';
 import '../../domain/entities/assistant_language.dart';
 import '../../domain/entities/chat_message.dart';
+import '../widgets/assistant_strings.dart';
 import 'assistant_language_provider.dart';
 
 part 'assistant_conversation_provider.g.dart';
@@ -38,9 +39,18 @@ class AssistantConversation extends _$AssistantConversation {
           .sendMessage(userMessage: trimmed, history: history, language: language);
       state = (messages: [...state.messages, reply], isSending: false);
     } catch (_) {
-      // The mock repository doesn't throw, but a future real API could —
-      // fail closed to "not sending" rather than leaving the UI stuck.
-      state = (messages: state.messages, isSending: false);
+      // Network failure, backend down, AI provider misconfigured/unavailable,
+      // etc. — surface it as a normal (if apologetic) assistant message
+      // rather than silently leaving the conversation stuck or the UI
+      // unchanged, so the user always gets a visible response to their
+      // question.
+      final errorMessage = ChatMessage(
+        id: 'assistant-error-${DateTime.now().microsecondsSinceEpoch}',
+        role: ChatMessageRole.assistant,
+        content: AssistantStrings.of(language).serviceUnavailable,
+        sentAt: DateTime.now(),
+      );
+      state = (messages: [...state.messages, errorMessage], isSending: false);
     }
   }
 

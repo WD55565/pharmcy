@@ -43,7 +43,7 @@ final class AssistantConversationProvider
 }
 
 String _$assistantConversationHash() =>
-    r'a7d92b469d33f8245bf30a02f0ffe00841f32878';
+    r'4de89011c784ebb1b7b1bdf48e5f2c4dbc0042ff';
 
 abstract class _$AssistantConversation
     extends $Notifier<AssistantConversationState> {

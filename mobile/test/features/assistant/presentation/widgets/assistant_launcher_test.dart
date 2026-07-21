@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/core/localization/l10n/app_localizations.dart';
 import 'package:mobile/features/assistant/data/datasources/assistant_language_local_data_source.dart';
-import 'package:mobile/features/assistant/data/repositories/mock_assistant_repository_impl.dart';
+import 'package:mobile/features/assistant/data/repositories/gemini_assistant_repository_impl.dart';
 import 'package:mobile/features/assistant/domain/entities/assistant_language.dart';
 import 'package:mobile/features/assistant/domain/entities/chat_message.dart';
 import 'package:mobile/features/assistant/domain/repositories/assistant_repository.dart';

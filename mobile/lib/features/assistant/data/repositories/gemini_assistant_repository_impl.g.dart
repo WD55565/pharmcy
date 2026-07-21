@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'mock_assistant_repository_impl.dart';
+part of 'gemini_assistant_repository_impl.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -55,4 +55,4 @@ final class AssistantRepositoryProvider
 }
 
 String _$assistantRepositoryHash() =>
-    r'e28fe44d66e28d7c9703e2a8544df7da04798b8a';
+    r'85daee7d9fd2bf9b3fe77001816318d43ddca900';

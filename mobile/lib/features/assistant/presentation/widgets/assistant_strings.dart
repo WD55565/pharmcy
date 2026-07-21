@@ -18,6 +18,7 @@ class AssistantStrings {
     required this.minimizeTooltip,
     required this.openAssistantTooltip,
     required this.cancel,
+    required this.serviceUnavailable,
   });
 
   final String chooseLanguageTitle;
@@ -31,6 +32,11 @@ class AssistantStrings {
   final String minimizeTooltip;
   final String openAssistantTooltip;
   final String cancel;
+
+  /// Shown as a chat bubble (not a dialog) when the backend/AI call fails,
+  /// so the failure reads as part of the conversation rather than a
+  /// separate error UI.
+  final String serviceUnavailable;
 
   static AssistantStrings of(AssistantLanguage language) => switch (language) {
     AssistantLanguage.english => _english,
@@ -50,6 +56,7 @@ class AssistantStrings {
     minimizeTooltip: 'Minimize',
     openAssistantTooltip: 'Open assistant',
     cancel: 'Cancel',
+    serviceUnavailable: "Sorry, I'm having trouble connecting right now. Please try again in a moment.",
   );
 
   static const _turkish = AssistantStrings._(
@@ -64,6 +71,7 @@ class AssistantStrings {
     minimizeTooltip: 'Küçült',
     openAssistantTooltip: 'Asistanı aç',
     cancel: 'Vazgeç',
+    serviceUnavailable: 'Üzgünüm, şu anda bağlanmakta sorun yaşıyorum. Lütfen birazdan tekrar deneyin.',
   );
 
   static const _arabic = AssistantStrings._(
@@ -78,5 +86,6 @@ class AssistantStrings {
     minimizeTooltip: 'تصغير',
     openAssistantTooltip: 'فتح المساعد',
     cancel: 'إلغاء',
+    serviceUnavailable: 'عذرًا، أواجه مشكلة في الاتصال الآن. يرجى المحاولة مرة أخرى بعد قليل.',
   );
 }

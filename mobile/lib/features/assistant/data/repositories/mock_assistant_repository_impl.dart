@@ -1,28 +1,21 @@
 import 'dart:math';
 
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import '../../../../core/network/result.dart';
 import '../../../../core/utils/turkish_text.dart';
-import '../../../pharmacy/data/repositories/pharmacy_repository_impl.dart' show pharmacyRepositoryProvider;
 import '../../../pharmacy/domain/entities/pharmacy.dart';
 import '../../../pharmacy/domain/repositories/pharmacy_repository.dart';
 import '../../domain/entities/assistant_language.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/repositories/assistant_repository.dart';
 
-part 'mock_assistant_repository_impl.g.dart';
-
-/// Stands in for a real AI/LLM backend. Recognizes a handful of intents by
-/// keyword and, where relevant, answers using the *real* pharmacy list via
-/// [PharmacyRepository] — everything else falls back to a generic helpful
+/// Deterministic, offline stand-in for [GeminiAssistantRepositoryImpl] —
+/// used in widget/unit tests so they don't depend on a live backend or AI
+/// provider, and available as a manual fallback if the real one can't be
+/// reached. Recognizes a handful of intents by keyword and, where
+/// relevant, answers using the *real* pharmacy list via
+/// [PharmacyRepository]; everything else falls back to a generic helpful
 /// reply. Simulates network/"thinking" latency so the typing indicator has
 /// something to show.
-///
-/// Swapping this for a real AI API later means writing a new
-/// [AssistantRepository] implementation (e.g. one that calls an HTTP
-/// endpoint) and overriding [assistantRepositoryProvider] — the
-/// presentation layer is unaffected either way.
 class MockAssistantRepositoryImpl implements AssistantRepository {
   MockAssistantRepositoryImpl(this._pharmacyRepository);
 
@@ -188,9 +181,4 @@ class MockAssistantRepositoryImpl implements AssistantRepository {
         return '';
     }
   }
-}
-
-@riverpod
-AssistantRepository assistantRepository(Ref ref) {
-  return MockAssistantRepositoryImpl(ref.watch(pharmacyRepositoryProvider));
 }
