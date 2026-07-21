@@ -8,6 +8,7 @@ import 'package:mobile/features/assistant/domain/entities/assistant_language.dar
 import 'package:mobile/features/assistant/domain/entities/chat_message.dart';
 import 'package:mobile/features/assistant/domain/repositories/assistant_repository.dart';
 import 'package:mobile/features/assistant/presentation/widgets/assistant_launcher.dart';
+import 'package:mobile/features/onboarding/data/datasources/onboarding_local_data_source.dart';
 import 'package:mobile/features/pharmacy/data/repositories/pharmacy_repository_impl.dart' show pharmacyRepositoryProvider;
 import 'package:mobile/features/pharmacy/domain/entities/pharmacy.dart';
 import 'package:mobile/core/network/result.dart';
@@ -41,10 +42,7 @@ class _FakePharmacyRepository implements PharmacyRepository {
   }
 }
 
-Future<void> _pumpLauncher(
-  WidgetTester tester, {
-  AssistantLanguage? initialLanguage,
-}) async {
+Future<void> _pumpLauncher(WidgetTester tester, {AssistantLanguage? initialLanguage}) async {
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
@@ -52,6 +50,9 @@ Future<void> _pumpLauncher(
         pharmacyRepositoryProvider.overrideWithValue(_FakePharmacyRepository()),
         assistantLanguageLocalDataSourceProvider.overrideWithValue(
           FakeAssistantLanguageLocalDataSource(initial: initialLanguage),
+        ),
+        onboardingLocalDataSourceProvider.overrideWithValue(
+          FakeOnboardingLocalDataSource()..completed = true,
         ),
       ],
       child: MaterialApp(
@@ -72,33 +73,22 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('first open with no saved language shows the language picker', (tester) async {
+  testWidgets('first open with no saved language opens the chat panel directly, no prompt', (
+    tester,
+  ) async {
     await _pumpLauncher(tester);
 
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
 
-    expect(find.text('Choose a language'), findsOneWidget);
-    expect(find.text('العربية'), findsOneWidget);
-    expect(find.text('English'), findsOneWidget);
-    expect(find.text('Türkçe'), findsOneWidget);
-  });
-
-  testWidgets('choosing a language opens the chat panel and is remembered', (tester) async {
-    await _pumpLauncher(tester);
-
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('English'));
-    await tester.pumpAndSettle();
-
-    // Chat panel is now open — its header title should be visible, and the
-    // FAB should be gone (replaced by the panel).
+    // No "choose a language" dialog — the chat panel opens straight away
+    // (defaulting to English, since no onboarding language was set in
+    // this test either).
+    expect(find.text('Choose a language'), findsNothing);
     expect(find.text('Pharmacy Assistant'), findsOneWidget);
-    expect(find.byType(FloatingActionButton), findsNothing);
   });
 
-  testWidgets('opening again with a saved language skips the picker', (tester) async {
+  testWidgets('a saved assistant language is used and the panel opens directly', (tester) async {
     await _pumpLauncher(tester, initialLanguage: AssistantLanguage.turkish);
 
     await tester.tap(find.byType(FloatingActionButton));

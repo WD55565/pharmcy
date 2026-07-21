@@ -67,7 +67,10 @@ GoRouter appRouter(Ref ref) {
             },
             pageBuilder: (context, state) {
               final id = int.parse(state.pathParameters['id']!);
-              return _fadeThroughPage(state, PharmacyDetailScreen(pharmacyId: id));
+              return _fadeThroughPage(
+                state,
+                PharmacyDetailScreen(pharmacyId: id),
+              );
             },
           ),
         ],
@@ -76,20 +79,32 @@ GoRouter appRouter(Ref ref) {
   );
 }
 
-/// A subtle fade + slide-up transition, used instead of GoRouter's default
-/// (platform-dependent, sometimes instant on web/desktop) page transition.
+/// A fade + slide-up + gentle scale transition, used instead of GoRouter's
+/// default (platform-dependent, sometimes instant on web/desktop) page
+/// transition — tuned to read as a deliberate, cinematic hand-off rather
+/// than an instant cut, while staying short enough not to feel sluggish.
 CustomTransitionPage<void> _fadeThroughPage(GoRouterState state, Widget child) {
   return CustomTransitionPage(
     key: state.pageKey,
     child: child,
-    transitionDuration: const Duration(milliseconds: 250),
+    transitionDuration: const Duration(milliseconds: 320),
+    reverseTransitionDuration: const Duration(milliseconds: 260),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      final curved = CurvedAnimation(parent: animation, curve: Curves.easeOut);
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+      );
       return FadeTransition(
         opacity: curved,
         child: SlideTransition(
-          position: Tween(begin: const Offset(0, 0.04), end: Offset.zero).animate(curved),
-          child: child,
+          position: Tween(
+            begin: const Offset(0, 0.06),
+            end: Offset.zero,
+          ).animate(curved),
+          child: ScaleTransition(
+            scale: Tween(begin: 0.98, end: 1.0).animate(curved),
+            child: child,
+          ),
         ),
       );
     },

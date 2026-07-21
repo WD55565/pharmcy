@@ -1,0 +1,127 @@
+{
+  "@@locale": "ar",
+  "appTitle": "Nöbetçi Eczane+",
+  "@appTitle": {
+    "description": "The application title shown in the OS task switcher and app bar."
+  },
+  "homeTitle": "الرئيسية",
+  "@homeTitle": {
+    "description": "Title of the home screen."
+  },
+  "loading": "جارٍ التحميل...",
+  "@loading": {
+    "description": "Generic loading state message."
+  },
+  "errorTitle": "حدث خطأ ما",
+  "@errorTitle": {
+    "description": "Generic error state title."
+  },
+  "errorRetry": "إعادة المحاولة",
+  "@errorRetry": {
+    "description": "Retry button label on error states."
+  },
+  "emptyTitle": "لا توجد نتائج",
+  "@emptyTitle": {
+    "description": "Generic empty state title."
+  },
+  "searchHint": "ابحث بالاسم أو المنطقة أو العنوان",
+  "@searchHint": {
+    "description": "Placeholder for the pharmacy search field."
+  },
+  "districtAll": "كل المناطق",
+  "@districtAll": {
+    "description": "Label for the 'all districts' filter chip."
+  },
+  "onDuty": "مناوبة",
+  "@onDuty": {
+    "description": "Badge label for a pharmacy currently on duty."
+  },
+  "notOnDuty": "غير مناوبة",
+  "@notOnDuty": {
+    "description": "Badge label for a pharmacy not currently on duty."
+  },
+  "openInMaps": "عرض على الخريطة",
+  "@openInMaps": {
+    "description": "Tooltip for the button that will open a pharmacy's location in maps."
+  },
+  "mapsComingSoon": "ستتوفر ميزة الخرائط قريبًا",
+  "@mapsComingSoon": {
+    "description": "Shown when the maps button is tapped before Maps integration is configured."
+  },
+  "noPharmaciesFound": "لم يتم العثور على صيدليات",
+  "@noPharmaciesFound": {
+    "description": "Empty state message when the pharmacy list (after filtering) has no results."
+  },
+  "noPharmaciesFoundHint": "حاول تعديل البحث أو فلتر المنطقة.",
+  "@noPharmaciesFoundHint": {
+    "description": "Empty state hint suggesting the user adjust search/filter."
+  },
+  "addressLabel": "العنوان",
+  "@addressLabel": {
+    "description": "Label for the pharmacy address field on the details screen."
+  },
+  "districtLabel": "المنطقة",
+  "@districtLabel": {
+    "description": "Label for the pharmacy district field on the details screen."
+  },
+  "phoneLabel": "الهاتف",
+  "@phoneLabel": {
+    "description": "Label for the pharmacy phone field on the details screen."
+  },
+  "dutyHoursLabel": "ساعات المناوبة",
+  "@dutyHoursLabel": {
+    "description": "Label for the opening/closing duty hours section."
+  },
+  "dutyHoursNotSpecified": "غير محدد",
+  "@dutyHoursNotSpecified": {
+    "description": "Shown when opening/closing time is not available for a pharmacy."
+  },
+  "callAction": "اتصال",
+  "@callAction": {
+    "description": "Button label to call the pharmacy."
+  },
+  "shareAction": "مشاركة",
+  "@shareAction": {
+    "description": "Button label to share the pharmacy."
+  },
+  "addToFavorites": "إضافة إلى المفضلة",
+  "@addToFavorites": {
+    "description": "Tooltip/action to add a pharmacy to favorites."
+  },
+  "removeFromFavorites": "إزالة من المفضلة",
+  "@removeFromFavorites": {
+    "description": "Tooltip/action to remove a pharmacy from favorites."
+  },
+  "actionUnavailable": "هذا الإجراء غير متاح حاليًا",
+  "@actionUnavailable": {
+    "description": "Shown when an external action (call, maps, share) could not be launched."
+  },
+  "pharmacyNotFound": "الصيدلية غير موجودة",
+  "@pharmacyNotFound": {
+    "description": "Title shown on the details screen when the pharmacy could not be loaded."
+  },
+  "onDutyOnly": "المناوبة فقط",
+  "@onDutyOnly": {
+    "description": "Label for the on-duty-only filter toggle."
+  },
+  "clearFilters": "مسح الفلاتر",
+  "@clearFilters": {
+    "description": "Action to reset search text, district, and on-duty filters."
+  },
+  "errorNetwork": "لا يوجد اتصال بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
+  "@errorNetwork": {
+    "description": "User-facing message for a network connectivity failure."
+  },
+  "errorTimeout": "انتهت مهلة الطلب. يرجى المحاولة مرة أخرى.",
+  "@errorTimeout": {
+    "description": "User-facing message for a request timeout."
+  },
+  "errorServer": "حدثت مشكلة من جانبنا. يرجى المحاولة مرة أخرى بعد قليل.",
+  "@errorServer": {
+    "description": "User-facing message for a server-side error response."
+  },
+  "errorUnknown": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+  "@errorUnknown": {
+    "description": "User-facing message for an unclassified error."
+  }
+}

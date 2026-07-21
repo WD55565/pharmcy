@@ -28,19 +28,30 @@ class DistrictFilterBar extends StatelessWidget {
         separatorBuilder: (context, index) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           if (index == 0) {
-            return ChoiceChip(
-              label: Text(l10n.districtAll),
-              selected: selectedDistrict == null,
-              onSelected: (_) => onSelected(null),
+            final isAllSelected = selectedDistrict == null;
+            return AnimatedScale(
+              scale: isAllSelected ? 1.06 : 1.0,
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOut,
+              child: ChoiceChip(
+                label: Text(l10n.districtAll),
+                selected: isAllSelected,
+                onSelected: (_) => onSelected(null),
+              ),
             );
           }
 
           final district = districts[index - 1];
           final isSelected = district == selectedDistrict;
-          return ChoiceChip(
-            label: Text(district),
-            selected: isSelected,
-            onSelected: (_) => onSelected(isSelected ? null : district),
+          return AnimatedScale(
+            scale: isSelected ? 1.06 : 1.0,
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
+            child: ChoiceChip(
+              label: Text(district),
+              selected: isSelected,
+              onSelected: (_) => onSelected(isSelected ? null : district),
+            ),
           );
         },
       ),

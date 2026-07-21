@@ -20,11 +20,13 @@ class OnboardingFlowScreen extends ConsumerStatefulWidget {
   final VoidCallback onComplete;
 
   @override
-  ConsumerState<OnboardingFlowScreen> createState() => _OnboardingFlowScreenState();
+  ConsumerState<OnboardingFlowScreen> createState() =>
+      _OnboardingFlowScreenState();
 }
 
 class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
   _OnboardingStep _step = _OnboardingStep.splash;
+  AssistantLanguage _selectedLanguage = AssistantLanguage.english;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,7 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
         ),
         _OnboardingStep.welcome => WelcomeScreen(
           key: const ValueKey('welcome'),
+          language: _selectedLanguage,
           onContinue: _complete,
         ),
       },
@@ -61,7 +64,10 @@ class _OnboardingFlowScreenState extends ConsumerState<OnboardingFlowScreen> {
   Future<void> _selectLanguage(AssistantLanguage language) async {
     await ref.read(onboardingLanguageProvider.notifier).select(language);
     if (!mounted) return;
-    setState(() => _step = _OnboardingStep.welcome);
+    setState(() {
+      _selectedLanguage = language;
+      _step = _OnboardingStep.welcome;
+    });
   }
 
   Future<void> _complete() async {
