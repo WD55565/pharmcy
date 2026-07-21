@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../data/repositories/gemini_assistant_repository_impl.dart';
+import '../../data/repositories/mock_assistant_repository_impl.dart';
 import '../../domain/entities/assistant_language.dart';
 import '../../domain/entities/chat_message.dart';
 import '../widgets/assistant_strings.dart';

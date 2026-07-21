@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'gemini_assistant_repository_impl.dart';
+part of 'mock_assistant_repository_impl.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,9 +8,20 @@ part of 'gemini_assistant_repository_impl.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Demo Mode: the app's default [AssistantRepository] while the Gemini
+/// integration is disabled (pending API billing/credits — see
+/// `GeminiAssistantRepositoryImpl`). Swapping back to Gemini once it's
+/// ready only requires changing this one provider body; nothing in
+/// `presentation/` depends on which implementation is wired here.
 
 @ProviderFor(assistantRepository)
 final assistantRepositoryProvider = AssistantRepositoryProvider._();
+
+/// Demo Mode: the app's default [AssistantRepository] while the Gemini
+/// integration is disabled (pending API billing/credits — see
+/// `GeminiAssistantRepositoryImpl`). Swapping back to Gemini once it's
+/// ready only requires changing this one provider body; nothing in
+/// `presentation/` depends on which implementation is wired here.
 
 final class AssistantRepositoryProvider
     extends
@@ -20,6 +31,11 @@ final class AssistantRepositoryProvider
           AssistantRepository
         >
     with $Provider<AssistantRepository> {
+  /// Demo Mode: the app's default [AssistantRepository] while the Gemini
+  /// integration is disabled (pending API billing/credits — see
+  /// `GeminiAssistantRepositoryImpl`). Swapping back to Gemini once it's
+  /// ready only requires changing this one provider body; nothing in
+  /// `presentation/` depends on which implementation is wired here.
   AssistantRepositoryProvider._()
     : super(
         from: null,
@@ -55,4 +71,4 @@ final class AssistantRepositoryProvider
 }
 
 String _$assistantRepositoryHash() =>
-    r'85daee7d9fd2bf9b3fe77001816318d43ddca900';
+    r'e28fe44d66e28d7c9703e2a8544df7da04798b8a';

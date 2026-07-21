@@ -1,11 +1,7 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import '../../domain/entities/assistant_language.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/repositories/assistant_repository.dart';
 import '../datasources/assistant_remote_data_source.dart';
-
-part 'gemini_assistant_repository_impl.g.dart';
 
 /// Real [AssistantRepository] backed by the app's own backend, which in
 /// turn calls Google's Gemini API server-side (see
@@ -57,9 +53,4 @@ class GeminiAssistantRepositoryImpl implements AssistantRepository {
     AssistantLanguage.turkish => 'Turkish',
     AssistantLanguage.arabic => 'Arabic',
   };
-}
-
-@riverpod
-AssistantRepository assistantRepository(Ref ref) {
-  return GeminiAssistantRepositoryImpl(ref.watch(assistantRemoteDataSourceProvider));
 }

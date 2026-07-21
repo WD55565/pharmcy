@@ -1,18 +1,24 @@
 import 'dart:math';
 
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../../../core/network/result.dart';
 import '../../../../core/utils/turkish_text.dart';
+import '../../../pharmacy/data/repositories/pharmacy_repository_impl.dart' show pharmacyRepositoryProvider;
 import '../../../pharmacy/domain/entities/pharmacy.dart';
 import '../../../pharmacy/domain/repositories/pharmacy_repository.dart';
 import '../../domain/entities/assistant_language.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../domain/repositories/assistant_repository.dart';
 
+part 'mock_assistant_repository_impl.g.dart';
+
 /// Deterministic, offline stand-in for [GeminiAssistantRepositoryImpl] —
 /// used in widget/unit tests so they don't depend on a live backend or AI
-/// provider, and available as a manual fallback if the real one can't be
-/// reached. Recognizes a handful of intents by keyword and, where
-/// relevant, answers using the *real* pharmacy list via
+/// provider, and currently the app's default ("Demo Mode") while the
+/// Gemini integration is temporarily disabled — see
+/// [assistantRepositoryProvider]. Recognizes a handful of intents by
+/// keyword and, where relevant, answers using the *real* pharmacy list via
 /// [PharmacyRepository]; everything else falls back to a generic helpful
 /// reply. Simulates network/"thinking" latency so the typing indicator has
 /// something to show.
@@ -181,4 +187,14 @@ class MockAssistantRepositoryImpl implements AssistantRepository {
         return '';
     }
   }
+}
+
+/// Demo Mode: the app's default [AssistantRepository] while the Gemini
+/// integration is disabled (pending API billing/credits — see
+/// `GeminiAssistantRepositoryImpl`). Swapping back to Gemini once it's
+/// ready only requires changing this one provider body; nothing in
+/// `presentation/` depends on which implementation is wired here.
+@riverpod
+AssistantRepository assistantRepository(Ref ref) {
+  return MockAssistantRepositoryImpl(ref.watch(pharmacyRepositoryProvider));
 }
