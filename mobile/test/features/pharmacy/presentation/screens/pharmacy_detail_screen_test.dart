@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart' show Override;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile/core/localization/l10n/app_localizations.dart';
 import 'package:mobile/core/network/failure.dart';
 import 'package:mobile/features/pharmacy/data/datasources/pharmacy_favorites_local_data_source.dart';
@@ -13,27 +12,7 @@ import 'package:mobile/features/pharmacy/presentation/screens/pharmacy_detail_sc
 import 'package:mobile/features/pharmacy/presentation/widgets/pharmacy_detail_skeleton.dart';
 import 'package:mobile/features/pharmacy/presentation/widgets/pharmacy_map_preview.dart';
 
-/// In-memory stand-in for the real SharedPreferences-backed data source, so
-/// tests never touch actual device storage.
-class _FakeFavoritesLocalDataSource extends PharmacyFavoritesLocalDataSource {
-  _FakeFavoritesLocalDataSource() : super(_UnusedPrefs());
-
-  Set<int> _stored = {};
-
-  @override
-  Set<int> loadFavoriteIds() => _stored;
-
-  @override
-  Future<void> saveFavoriteIds(Set<int> ids) async => _stored = ids;
-}
-
-// Never actually called — loadFavoriteIds/saveFavoriteIds are overridden
-// above to avoid touching real SharedPreferences in tests.
-class _UnusedPrefs implements SharedPreferences {
-  @override
-  dynamic noSuchMethod(Invocation invocation) =>
-      throw UnimplementedError('SharedPreferences should not be used directly in tests');
-}
+import '../../../../support/fake_local_data_sources.dart';
 
 const _pharmacy = Pharmacy(
   id: 42,
@@ -85,7 +64,7 @@ Widget _wrap(Widget child, {required List<Override> overrides}) {
   return ProviderScope(
     overrides: [
       pharmacyFavoritesLocalDataSourceProvider.overrideWithValue(
-        _FakeFavoritesLocalDataSource(),
+        FakeFavoritesLocalDataSource(),
       ),
       ...overrides,
     ],

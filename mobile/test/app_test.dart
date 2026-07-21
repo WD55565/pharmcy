@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile/app/app.dart';
 import 'package:mobile/core/config/app_config.dart';
+import 'package:mobile/features/assistant/data/datasources/assistant_language_local_data_source.dart';
+import 'package:mobile/features/pharmacy/data/datasources/pharmacy_favorites_local_data_source.dart';
+
+import 'support/fake_local_data_sources.dart';
 
 void main() {
   testWidgets('app boots and renders the home screen shell', (tester) async {
@@ -17,6 +21,12 @@ void main() {
               // state driven by AsyncValue, not a real backend.
               apiBaseUrl: 'http://localhost:8080/api',
             ),
+          ),
+          pharmacyFavoritesLocalDataSourceProvider.overrideWithValue(
+            FakeFavoritesLocalDataSource(),
+          ),
+          assistantLanguageLocalDataSourceProvider.overrideWithValue(
+            FakeAssistantLanguageLocalDataSource(),
           ),
         ],
         child: const NobetciEczaneApp(),
