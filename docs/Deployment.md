@@ -168,10 +168,21 @@ These are outside what a repository can configure for you:
   reverse proxy in front of the backend; not configured in this repo.
 - **DNS** for the API domain and (if applicable) a web-hosted build of the
   Flutter app.
-- **Google Maps API key** — obtain one and wire it into
-  `android/app/src/main/AndroidManifest.xml` and `ios/Runner/AppDelegate.swift`
-  (placeholders already present) if in-app map rendering is needed; the
-  "Open in Maps" / "Show on Map" actions work today without one.
+- **Google Maps API key** — **deliberately deferred** (as of Phase 3). The
+  in-app map preview (`PharmacyMapPreview` /
+  `lib/features/pharmacy/presentation/widgets/pharmacy_map_preview.dart`)
+  is fully built and renders a `GoogleMap` widget when a pharmacy has
+  coordinates, but no API key is configured anywhere — not in
+  `web/index.html` (no Maps JavaScript API script tag), not in
+  `android/app/src/main/AndroidManifest.xml`, not in
+  `ios/Runner/AppDelegate.swift` (placeholders already present in all
+  three). On the deployed web app this means the preview area does not
+  render map tiles. This is a known, accepted gap, not a bug — the "Open
+  in Maps" / "Show on Map" button works fully today without any key
+  (it's a plain external URL launch to Google/Apple Maps, no SDK
+  involved). To finish this later: obtain a Google Maps API key, add the
+  JS script tag to `web/index.html`, and fill in the two native
+  placeholders.
 - **App store / Play Store signing and submission** — code signing
   certificates, provisioning profiles, and store listings are not part of
   this repository.
