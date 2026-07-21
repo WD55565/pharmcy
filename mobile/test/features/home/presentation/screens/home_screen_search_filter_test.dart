@@ -59,12 +59,14 @@ void main() {
   });
 
   testWidgets(
-    'typing a district name filters instantly, with no extra network call',
+    'typing a district name filters (after debounce), with no extra network call',
     (tester) async {
       await _pumpHome(tester);
 
       await tester.enterText(find.byType(TextField), 'beşiktaş');
-      await tester.pump();
+      // Search updates are debounced by 300ms to avoid re-filtering on
+      // every keystroke; advance the (fake) clock past that.
+      await tester.pump(const Duration(milliseconds: 350));
 
       expect(find.text('Sahil Eczanesi'), findsOneWidget);
       expect(find.text('Merkez Eczanesi'), findsNothing);
@@ -72,11 +74,11 @@ void main() {
     },
   );
 
-  testWidgets('typing an address substring filters instantly', (tester) async {
+  testWidgets('typing an address substring filters (after debounce)', (tester) async {
     await _pumpHome(tester);
 
     await tester.enterText(find.byType(TextField), 'bağdat');
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
 
     expect(find.text('Merkez Eczanesi'), findsOneWidget);
     expect(find.text('Sahil Eczanesi'), findsNothing);
