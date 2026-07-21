@@ -4,6 +4,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/assistant/presentation/widgets/assistant_launcher.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/onboarding/presentation/providers/onboarding_provider.dart';
+import '../../features/onboarding/presentation/screens/onboarding_flow_screen.dart';
 import '../../features/pharmacy/presentation/screens/pharmacy_detail_screen.dart';
 import 'route_paths.dart';
 
@@ -13,7 +15,27 @@ part 'app_router.g.dart';
 GoRouter appRouter(Ref ref) {
   return GoRouter(
     initialLocation: RoutePaths.home,
+    // First visit only: bounce `/` to the onboarding flow until it's been
+    // completed, and bounce `/onboarding` back to `/` once it has (e.g. a
+    // stale bookmark/back-navigation on a returning visit).
+    redirect: (context, state) {
+      final completed = ref.read(onboardingCompletedProvider);
+      final atOnboarding = state.matchedLocation == RoutePaths.onboarding;
+      if (!completed && !atOnboarding) return RoutePaths.onboarding;
+      if (completed && atOnboarding) return RoutePaths.home;
+      return null;
+    },
     routes: [
+      // Deliberately outside the ShellRoute below — the onboarding screens
+      // are full-bleed and shouldn't show the assistant FAB.
+      GoRoute(
+        path: RoutePaths.onboarding,
+        name: RouteNames.onboarding,
+        pageBuilder: (context, state) => _fadeThroughPage(
+          state,
+          OnboardingFlowScreen(onComplete: () => context.go(RoutePaths.home)),
+        ),
+      ),
       // ShellRoute wraps every nested route's page with a persistent
       // widget — used here to layer the assistant FAB/panel on every
       // screen. Critically, this keeps it a genuine descendant of

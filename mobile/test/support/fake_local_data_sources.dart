@@ -1,5 +1,6 @@
 import 'package:mobile/features/assistant/data/datasources/assistant_language_local_data_source.dart';
 import 'package:mobile/features/assistant/domain/entities/assistant_language.dart';
+import 'package:mobile/features/onboarding/data/datasources/onboarding_local_data_source.dart';
 import 'package:mobile/features/pharmacy/data/datasources/pharmacy_favorites_local_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,4 +41,27 @@ class FakeAssistantLanguageLocalDataSource extends AssistantLanguageLocalDataSou
 
   @override
   Future<void> saveLanguage(AssistantLanguage language) async => _stored = language;
+}
+
+/// In-memory stand-in for the real SharedPreferences-backed onboarding
+/// data source. Defaults to already-completed so existing tests land
+/// straight on the home screen, matching a returning user; pass
+/// [completed]: false to test the first-visit onboarding flow itself.
+class FakeOnboardingLocalDataSource extends OnboardingLocalDataSource {
+  FakeOnboardingLocalDataSource({this.completed = true}) : super(UnusedPrefs());
+
+  bool completed;
+  AssistantLanguage? _language;
+
+  @override
+  bool hasCompletedOnboarding() => completed;
+
+  @override
+  Future<void> markOnboardingCompleted() async => completed = true;
+
+  @override
+  AssistantLanguage? loadLanguage() => _language;
+
+  @override
+  Future<void> saveLanguage(AssistantLanguage language) async => _language = language;
 }

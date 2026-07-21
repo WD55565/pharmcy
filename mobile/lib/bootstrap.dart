@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app/app.dart';
 import 'core/config/app_config.dart';
 import 'features/assistant/data/datasources/assistant_language_local_data_source.dart';
+import 'features/onboarding/data/datasources/onboarding_local_data_source.dart';
 import 'features/pharmacy/data/datasources/pharmacy_favorites_local_data_source.dart';
 
 /// Shared startup path for every entrypoint (`main_development.dart`,
@@ -25,6 +26,7 @@ Future<void> bootstrap(AppConfig config) async {
         assistantLanguageLocalDataSourceProvider.overrideWithValue(
           AssistantLanguageLocalDataSource(prefs),
         ),
+        onboardingLocalDataSourceProvider.overrideWithValue(OnboardingLocalDataSource(prefs)),
       ],
       child: const NobetciEczaneApp(),
     ),

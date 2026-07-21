@@ -10,40 +10,57 @@ import 'package:mobile/features/pharmacy/data/datasources/pharmacy_favorites_loc
 import 'support/fake_local_data_sources.dart';
 
 void main() {
-  testWidgets('app boots and renders the home screen shell', (tester) async {
+  testWidgets('first visit shows the onboarding flow, then reaches home after Continue', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
           appConfigProvider.overrideWithValue(
             const AppConfig(
               flavor: AppFlavor.development,
-              // Deliberately unreachable in the test sandbox — this proves
-              // the screen doesn't crash and instead settles into an error
-              // state driven by AsyncValue, not a real backend.
               apiBaseUrl: 'http://localhost:8080/api',
             ),
           ),
-          pharmacyFavoritesLocalDataSourceProvider.overrideWithValue(
-            FakeFavoritesLocalDataSource(),
-          ),
+          pharmacyFavoritesLocalDataSourceProvider.overrideWithValue(FakeFavoritesLocalDataSource()),
           assistantLanguageLocalDataSourceProvider.overrideWithValue(
             FakeAssistantLanguageLocalDataSource(),
           ),
-          onboardingLocalDataSourceProvider.overrideWithValue(FakeOnboardingLocalDataSource()),
+          onboardingLocalDataSourceProvider.overrideWithValue(
+            FakeOnboardingLocalDataSource(completed: false),
+          ),
         ],
         child: const NobetciEczaneApp(),
       ),
     );
+
+    // Splash is showing first.
+    await tester.pump();
+    expect(find.text('Nöbetçi Eczane+'), findsOneWidget);
+
+    // Let the splash animation (2200ms controller + 350ms hand-off delay)
+    // run to completion, in staged steps so both the AnimationController
+    // and the subsequent Future.delayed actually fire.
+    await tester.pump(const Duration(milliseconds: 2300));
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
+    expect(find.text('Choose your language'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    // Pick English.
+    await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
 
-    // App shell is present regardless of the network outcome.
-    expect(find.byType(Scaffold), findsWidgets);
+    // Welcome step.
+    expect(find.text('Welcome to Nöbetçi Eczane+'), findsOneWidget);
+    expect(find.text('Continue'), findsOneWidget);
+
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    // Home screen shell is now showing.
     expect(find.byType(AppBar), findsOneWidget);
     expect(find.byType(TextField), findsOneWidget);
-    expect(find.byType(RefreshIndicator), findsOneWidget);
-
-    // No uncaught exceptions from the failed request; it settled into a
-    // handled state instead.
     expect(tester.takeException(), isNull);
   });
 }
