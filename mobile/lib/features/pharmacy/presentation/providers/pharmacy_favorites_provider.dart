@@ -1,23 +1,28 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../data/datasources/pharmacy_favorites_local_data_source.dart';
+
 part 'pharmacy_favorites_provider.g.dart';
 
-/// In-memory set of favorited pharmacy ids.
-///
-/// This is UI/architecture prep only, as requested — state is lost on app
-/// restart. Swapping in real persistence (e.g. a local database or
-/// key-value store) later only means changing this provider's
-/// implementation; nothing in the presentation layer needs to change.
+/// Set of favorited pharmacy ids, persisted on-device via
+/// [PharmacyFavoritesLocalDataSource] (`SharedPreferences`). Loaded
+/// synchronously from the already-initialized data source (see
+/// `bootstrap()`), so there's no loading state for the favorite icon —
+/// it's available immediately on first frame.
 @riverpod
 class PharmacyFavorites extends _$PharmacyFavorites {
   @override
-  Set<int> build() => const {};
+  Set<int> build() {
+    return ref.watch(pharmacyFavoritesLocalDataSourceProvider).loadFavoriteIds();
+  }
 
   bool isFavorite(int pharmacyId) => state.contains(pharmacyId);
 
   void toggle(int pharmacyId) {
-    state = state.contains(pharmacyId)
+    final updated = state.contains(pharmacyId)
         ? ({...state}..remove(pharmacyId))
         : ({...state}..add(pharmacyId));
+    state = updated;
+    ref.read(pharmacyFavoritesLocalDataSourceProvider).saveFavoriteIds(updated);
   }
 }

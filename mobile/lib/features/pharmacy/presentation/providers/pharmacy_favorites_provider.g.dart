@@ -8,30 +8,27 @@ part of 'pharmacy_favorites_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// In-memory set of favorited pharmacy ids.
-///
-/// This is UI/architecture prep only, as requested — state is lost on app
-/// restart. Swapping in real persistence (e.g. a local database or
-/// key-value store) later only means changing this provider's
-/// implementation; nothing in the presentation layer needs to change.
+/// Set of favorited pharmacy ids, persisted on-device via
+/// [PharmacyFavoritesLocalDataSource] (`SharedPreferences`). Loaded
+/// synchronously from the already-initialized data source (see
+/// `bootstrap()`), so there's no loading state for the favorite icon —
+/// it's available immediately on first frame.
 
 @ProviderFor(PharmacyFavorites)
 final pharmacyFavoritesProvider = PharmacyFavoritesProvider._();
 
-/// In-memory set of favorited pharmacy ids.
-///
-/// This is UI/architecture prep only, as requested — state is lost on app
-/// restart. Swapping in real persistence (e.g. a local database or
-/// key-value store) later only means changing this provider's
-/// implementation; nothing in the presentation layer needs to change.
+/// Set of favorited pharmacy ids, persisted on-device via
+/// [PharmacyFavoritesLocalDataSource] (`SharedPreferences`). Loaded
+/// synchronously from the already-initialized data source (see
+/// `bootstrap()`), so there's no loading state for the favorite icon —
+/// it's available immediately on first frame.
 final class PharmacyFavoritesProvider
     extends $NotifierProvider<PharmacyFavorites, Set<int>> {
-  /// In-memory set of favorited pharmacy ids.
-  ///
-  /// This is UI/architecture prep only, as requested — state is lost on app
-  /// restart. Swapping in real persistence (e.g. a local database or
-  /// key-value store) later only means changing this provider's
-  /// implementation; nothing in the presentation layer needs to change.
+  /// Set of favorited pharmacy ids, persisted on-device via
+  /// [PharmacyFavoritesLocalDataSource] (`SharedPreferences`). Loaded
+  /// synchronously from the already-initialized data source (see
+  /// `bootstrap()`), so there's no loading state for the favorite icon —
+  /// it's available immediately on first frame.
   PharmacyFavoritesProvider._()
     : super(
         from: null,
@@ -59,14 +56,13 @@ final class PharmacyFavoritesProvider
   }
 }
 
-String _$pharmacyFavoritesHash() => r'882b9eb2905673023c2346cf16f364e5c9160b1c';
+String _$pharmacyFavoritesHash() => r'f88e817ea2d0baebd8db9221c6a8118a73d91c4b';
 
-/// In-memory set of favorited pharmacy ids.
-///
-/// This is UI/architecture prep only, as requested — state is lost on app
-/// restart. Swapping in real persistence (e.g. a local database or
-/// key-value store) later only means changing this provider's
-/// implementation; nothing in the presentation layer needs to change.
+/// Set of favorited pharmacy ids, persisted on-device via
+/// [PharmacyFavoritesLocalDataSource] (`SharedPreferences`). Loaded
+/// synchronously from the already-initialized data source (see
+/// `bootstrap()`), so there's no loading state for the favorite icon —
+/// it's available immediately on first frame.
 
 abstract class _$PharmacyFavorites extends $Notifier<Set<int>> {
   Set<int> build();
