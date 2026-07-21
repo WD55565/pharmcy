@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/app_spacing.dart';
 import '../../domain/entities/assistant_language.dart';
 import '../providers/assistant_conversation_provider.dart';
 import '../providers/assistant_language_provider.dart';
@@ -114,19 +115,30 @@ class _AssistantChatPanelState extends ConsumerState<AssistantChatPanel> {
             child: conversation.messages.isEmpty
                 ? Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Text(
-                        strings.emptyConversation,
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
+                      padding: const EdgeInsets.all(AppSpacing.xl),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.chat_bubble_outline,
+                            size: 36,
+                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            strings.emptyConversation,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   )
                 : ListView.builder(
                     controller: _scrollController,
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(AppSpacing.md),
                     itemCount: conversation.messages.length + (conversation.isSending ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index == conversation.messages.length) {
@@ -180,11 +192,11 @@ class _Header extends StatelessWidget {
     final theme = Theme.of(context);
     return Container(
       color: theme.colorScheme.primaryContainer,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
       child: Row(
         children: [
           Icon(Icons.smart_toy_outlined, color: theme.colorScheme.onPrimaryContainer),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
               title,
@@ -232,7 +244,7 @@ class _InputBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       child: Row(
         children: [
           Expanded(
@@ -244,7 +256,7 @@ class _InputBar extends StatelessWidget {
               onSubmitted: (_) => enabled ? onSend() : null,
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSpacing.sm),
           IconButton.filled(
             icon: const Icon(Icons.send),
             onPressed: enabled ? onSend : null,

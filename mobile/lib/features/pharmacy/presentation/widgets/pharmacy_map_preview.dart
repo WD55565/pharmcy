@@ -29,28 +29,37 @@ class PharmacyMapPreview extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         height: 180,
-        child: GestureDetector(
-          onTap: onTap,
-          child: AbsorbPointer(
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(target: position, zoom: 15),
-              markers: {
-                Marker(
-                  markerId: MarkerId('pharmacy-${pharmacy.id}'),
-                  position: position,
-                ),
-              },
-              liteModeEnabled: true,
-              zoomControlsEnabled: false,
-              zoomGesturesEnabled: false,
-              scrollGesturesEnabled: false,
-              rotateGesturesEnabled: false,
-              tiltGesturesEnabled: false,
-              myLocationButtonEnabled: false,
-              myLocationEnabled: false,
-              mapToolbarEnabled: false,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            AbsorbPointer(
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(target: position, zoom: 15),
+                markers: {
+                  Marker(
+                    markerId: MarkerId('pharmacy-${pharmacy.id}'),
+                    position: position,
+                  ),
+                },
+                liteModeEnabled: true,
+                zoomControlsEnabled: false,
+                zoomGesturesEnabled: false,
+                scrollGesturesEnabled: false,
+                rotateGesturesEnabled: false,
+                tiltGesturesEnabled: false,
+                myLocationButtonEnabled: false,
+                myLocationEnabled: false,
+                mapToolbarEnabled: false,
+              ),
             ),
-          ),
+            // Material overlay gives the tap a visible ripple, matching the
+            // press feedback every other tappable surface in the app has —
+            // without it, tapping the map preview felt inert.
+            Material(
+              type: MaterialType.transparency,
+              child: InkWell(onTap: onTap),
+            ),
+          ],
         ),
       ),
     );
